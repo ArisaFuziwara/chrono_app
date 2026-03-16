@@ -10,301 +10,282 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="app">
-    <!-- LOGIN SCREEN -->
-    <div id="screen-login" class="screen active">
-      <div class="login-bg">
-        <div class="blob blob1"></div>
-        <div class="blob blob2"></div>
-        <div class="blob blob3"></div>
+<div id="app">
+
+  <!-- ── LOGIN SCREEN ── -->
+  <div id="screen-login" class="screen active">
+    <div class="login-bg">
+      <div class="blob blob1"></div>
+      <div class="blob blob2"></div>
+      <div class="blob blob3"></div>
+    </div>
+    <div class="login-card">
+      <div class="login-logo">
+        <div class="logo-icon">⏱</div>
+        <h1 class="logo-title">Chrono</h1>
+        <p class="logo-sub">Seu tempo, seu ritmo.</p>
       </div>
-      <div class="login-card">
-        <div class="login-logo">
-          <div class="logo-icon">⏱</div>
-          <h1 class="logo-title">Chrono</h1>
-          <p class="logo-sub">Seu tempo, seu ritmo.</p>
-        </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login"    data-tab="login">Entrar</button>
+        <button class="auth-tab"        id="tab-register" data-tab="register">Criar conta</button>
+      </div>
+      <!-- LOGIN -->
+      <div id="form-login" class="auth-form">
         <div class="form-group">
-          <label>Usuário</label>
-          <input type="text" id="login-user" placeholder="seu usuário" autocomplete="username" />
+          <label>E-mail</label>
+          <input type="email"    id="login-email" placeholder="seu@email.com" autocomplete="email" />
         </div>
         <div class="form-group">
           <label>Senha</label>
-          <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" />
+          <input type="password" id="login-pass"  placeholder="••••••••" autocomplete="current-password" />
         </div>
-        <p id="login-error" class="error-msg hidden">Usuário ou senha incorretos.</p>
-        <button class="btn-primary" onclick="doLogin()">Entrar</button>
-        <p class="login-hint">Demo: <strong>admin</strong> / <strong>1234</strong></p>
+        <p id="login-error" class="error-msg hidden"></p>
+        <button class="btn-primary" id="btn-login">Entrar</button>
+        <button class="btn-forgot"  id="btn-forgot">Esqueci minha senha</button>
       </div>
-    </div>
-
-    <!-- MAIN APP -->
-    <div id="screen-app" class="screen hidden">
-      <!-- NOTIFICATION BANNER -->
-      <div id="notif-banner" class="notif-banner hidden">
-        <span id="notif-text"></span>
-        <div class="notif-actions">
-          <button id="notif-yes" class="notif-btn yes">Sim!</button>
-          <button id="notif-no" class="notif-btn no" onclick="dismissNotif()">Agora não</button>
+      <!-- REGISTER -->
+      <div id="form-register" class="auth-form hidden">
+        <div class="form-group">
+          <label>Nome</label>
+          <input type="text"     id="reg-name"  placeholder="Seu nome" />
         </div>
+        <div class="form-group">
+          <label>E-mail</label>
+          <input type="email"    id="reg-email" placeholder="seu@email.com" autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label>Senha</label>
+          <input type="password" id="reg-pass"  placeholder="mínimo 6 caracteres" autocomplete="new-password" />
+        </div>
+        <p id="reg-error" class="error-msg hidden"></p>
+        <button class="btn-primary" id="btn-register">Criar conta</button>
       </div>
-
-      <!-- CONFETTI LAYER -->
-      <div id="confetti-layer" class="confetti-layer hidden"></div>
-
-      <!-- CELEBRATION MODAL -->
-      <div id="modal-celebration" class="modal-overlay hidden">
-        <div class="modal-card celebration-card">
-          <div class="celebration-emojis">🎉🥳🎊</div>
-          <h2>Meta atingida!</h2>
-          <p id="cel-month"></p>
-          <div class="cel-stats" id="cel-stats"></div>
-          <button class="btn-primary" onclick="closeCelebration()">Arrasou! 🚀</button>
-        </div>
-      </div>
-
-      <!-- ALERT MODAL -->
-      <div id="modal-alert" class="modal-overlay hidden">
-        <div class="modal-card">
-          <h3 id="alert-title"></h3>
-          <p id="alert-msg"></p>
-          <div class="modal-actions">
-            <button id="alert-cancel" class="btn-secondary" onclick="closeAlert()">Cancelar</button>
-            <button id="alert-confirm" class="btn-primary">Confirmar</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- PAGES -->
-      <div id="pages">
-        <!-- HOME -->
-        <div id="page-home" class="page active">
-          <div class="page-header">
-            <div class="header-left">
-              <div class="avatar-wrap" onclick="goTo('settings')">
-                <img id="home-avatar" src="" alt="avatar" class="avatar-img hidden" />
-                <div id="home-avatar-fallback" class="avatar-fallback">😊</div>
-              </div>
-              <div>
-                <p class="greeting" id="home-greeting">Olá!</p>
-                <p class="date-label" id="home-date"></p>
-              </div>
-            </div>
-            <button class="icon-btn" onclick="goTo('settings')">⚙️</button>
-          </div>
-
-          <!-- POINTS CARD -->
-          <div class="points-card green-card">
-            <div class="points-card-left">
-              <p class="card-label">Horas este mês</p>
-              <p class="card-value" id="home-total-h">0h 00m</p>
-              <p class="card-sub" id="home-week-h">↑ +0h esta semana</p>
-            </div>
-            <div class="card-doodle">🌿</div>
-          </div>
-
-          <!-- DONUT -->
-          <div class="donut-section">
-            <canvas id="donut-chart" width="160" height="160"></canvas>
-            <div class="donut-center">
-              <p id="donut-pct">0%</p>
-              <p class="donut-label">da meta</p>
-            </div>
-            <div class="donut-legend">
-              <div class="legend-item"><span class="dot green"></span><span id="legend-done">0h feitas</span></div>
-              <div class="legend-item"><span class="dot gray"></span><span id="legend-left">171h de meta</span></div>
-              <div class="legend-item credit-legend"><span class="dot orange"></span><span id="legend-credit">+0h crédito</span></div>
-            </div>
-          </div>
-
-          <!-- QUICK ACTIONS -->
-          <p class="section-title">Ações rápidas</p>
-          <div class="quick-actions">
-            <div class="qa-card blue" onclick="goTo('timer')">
-              <div class="qa-icon">⏱</div>
-              <p>Cronômetro</p>
-            </div>
-            <div class="qa-card yellow" onclick="goTo('log')">
-              <div class="qa-icon">✏️</div>
-              <p>Lançar horas</p>
-            </div>
-            <div class="qa-card purple" onclick="goTo('history')">
-              <div class="qa-icon">📋</div>
-              <p>Histórico</p>
-            </div>
-          </div>
-
-          <!-- RECENT -->
-          <div class="section-header">
-            <p class="section-title">Últimos lançamentos</p>
-            <span class="view-all" onclick="goTo('history')">Ver tudo</span>
-          </div>
-          <div id="recent-list" class="entry-list"></div>
-        </div>
-
-        <!-- TIMER PAGE -->
-        <div id="page-timer" class="page hidden">
-          <div class="page-header">
-            <button class="back-btn" onclick="goTo('home')">← Voltar</button>
-            <h2>Cronômetro</h2>
-            <div></div>
-          </div>
-
-          <div class="timer-card blue-card">
-            <div class="card-doodle">⏱</div>
-            <p class="card-label">Tempo rodando</p>
-            <p class="timer-display" id="timer-display">00:00:00</p>
-            <p class="card-sub" id="timer-started-at">—</p>
-          </div>
-
-          <div class="timer-controls">
-            <button id="btn-start" class="btn-timer green" onclick="startTimer()">▶ Iniciar</button>
-            <button id="btn-pause" class="btn-timer yellow hidden" onclick="pauseTimer()">⏸ Pausar</button>
-            <button id="btn-resume" class="btn-timer green hidden" onclick="resumeTimer()">▶ Retomar</button>
-            <button id="btn-stop" class="btn-timer red hidden" onclick="stopTimer()">⏹ Encerrar</button>
-          </div>
-
-          <div class="alarm-section">
-            <p class="section-title">🔔 Alarmes do dia</p>
-            <div id="alarm-list" class="alarm-list"></div>
-          </div>
-        </div>
-
-        <!-- LOG PAGE -->
-        <div id="page-log" class="page hidden">
-          <div class="page-header">
-            <button class="back-btn" onclick="goTo('home')">← Voltar</button>
-            <h2>Lançar horas</h2>
-            <div></div>
-          </div>
-          <div class="log-form card">
-            <div class="form-group">
-              <label>Data</label>
-              <input type="date" id="log-date" />
-            </div>
-            <div class="form-group">
-              <label>Horas trabalhadas</label>
-              <div class="time-inputs">
-                <input type="number" id="log-hours" min="0" max="24" placeholder="0" />
-                <span>h</span>
-                <input type="number" id="log-minutes" min="0" max="59" placeholder="00" />
-                <span>min</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Notas (opcional)</label>
-              <input type="text" id="log-notes" placeholder="ex: reuniões, desenvolvimento..." />
-            </div>
-            <button class="btn-primary" onclick="saveLogEntry()">Salvar lançamento</button>
-          </div>
-        </div>
-
-        <!-- HISTORY PAGE -->
-        <div id="page-history" class="page hidden">
-          <div class="page-header">
-            <button class="back-btn" onclick="goTo('home')">← Voltar</button>
-            <h2>Histórico</h2>
-            <div></div>
-          </div>
-          <div class="month-tabs" id="month-tabs"></div>
-          <div id="history-list" class="entry-list"></div>
-
-          <div class="credit-card-section">
-            <p class="section-title">🏆 Créditos acumulados</p>
-            <div id="credits-list" class="credits-list"></div>
-          </div>
-        </div>
-
-        <!-- SETTINGS PAGE -->
-        <div id="page-settings" class="page hidden">
-          <div class="page-header">
-            <button class="back-btn" onclick="goTo('home')">← Voltar</button>
-            <h2>Configurações</h2>
-            <div></div>
-          </div>
-
-          <!-- PROFILE -->
-          <div class="settings-section card">
-            <p class="settings-section-title">Perfil</p>
-            <div class="avatar-upload-wrap">
-              <div class="avatar-upload" onclick="document.getElementById('avatar-file').click()">
-                <img id="settings-avatar" src="" class="hidden" alt="avatar" />
-                <div id="settings-avatar-fallback" class="avatar-fallback large">😊</div>
-                <div class="avatar-overlay">📷</div>
-              </div>
-              <input type="file" id="avatar-file" accept="image/*" class="hidden" onchange="uploadAvatar(event)" />
-            </div>
-            <div class="form-group">
-              <label>Nome de exibição</label>
-              <input type="text" id="settings-name" placeholder="Seu nome" />
-            </div>
-            <div class="form-group">
-              <label>Nova senha</label>
-              <input type="password" id="settings-pass" placeholder="deixe em branco p/ manter" />
-            </div>
-          </div>
-
-          <!-- GOALS -->
-          <div class="settings-section card">
-            <p class="settings-section-title">Metas & Horas</p>
-            <div class="form-group">
-              <label>Meta mensal de horas</label>
-              <input type="number" id="settings-goal" min="1" max="400" />
-            </div>
-            <div class="form-group">
-              <label>Horas por dia de trabalho</label>
-              <input type="number" id="settings-hpd" min="1" max="24" step="0.5" />
-            </div>
-            <div class="toggle-row">
-              <div>
-                <p class="toggle-label">Resetar crédito ao virar o ano</p>
-                <p class="toggle-desc">Créditos de anos anteriores não serão contabilizados</p>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" id="settings-reset-year" />
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-
-          <!-- ALARMS -->
-          <div class="settings-section card">
-            <p class="settings-section-title">🔔 Alarmes / Notificações</p>
-            <div id="alarms-config-list"></div>
-            <button class="btn-secondary" onclick="addAlarm()">+ Adicionar alarme</button>
-          </div>
-
-          <button class="btn-primary" onclick="saveSettings()">Salvar configurações</button>
-          <button class="btn-logout" onclick="doLogout()">Sair da conta</button>
-        </div>
-      </div>
-
-      <!-- BOTTOM NAV -->
-      <nav class="bottom-nav">
-        <button class="nav-btn active" onclick="goTo('home')" data-page="home">
-          <span class="nav-icon">🏠</span>
-          <span>Início</span>
-        </button>
-        <button class="nav-btn" onclick="goTo('timer')" data-page="timer">
-          <span class="nav-icon">⚡</span>
-          <span>Timer</span>
-        </button>
-        <button class="nav-btn" onclick="goTo('log')" data-page="log">
-          <span class="nav-icon">✏️</span>
-          <span>Lançar</span>
-        </button>
-        <button class="nav-btn" onclick="goTo('history')" data-page="history">
-          <span class="nav-icon">📋</span>
-          <span>Histórico</span>
-        </button>
-        <button class="nav-btn" onclick="goTo('settings')" data-page="settings">
-          <span class="nav-icon">👤</span>
-          <span>Perfil</span>
-        </button>
-      </nav>
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <!-- ── LOADING ── -->
+  <div id="screen-loading" class="screen hidden loading-screen">
+    <div class="loading-logo">⏱</div>
+    <p>Carregando...</p>
+  </div>
+
+  <!-- ── MAIN APP ── -->
+  <div id="screen-app" class="screen hidden">
+
+    <div id="notif-banner" class="notif-banner hidden">
+      <span id="notif-text"></span>
+      <div class="notif-actions">
+        <button id="notif-yes" class="notif-btn yes">Sim!</button>
+        <button id="notif-no"  class="notif-btn no">Agora não</button>
+      </div>
+    </div>
+
+    <div id="confetti-layer" class="confetti-layer hidden"></div>
+
+    <div id="modal-celebration" class="modal-overlay hidden">
+      <div class="modal-card celebration-card">
+        <div class="celebration-emojis">🎉🥳🎊</div>
+        <h2>Meta atingida!</h2>
+        <p id="cel-month"></p>
+        <div class="cel-stats" id="cel-stats"></div>
+        <button class="btn-primary" id="btn-close-celebration">Arrasou! 🚀</button>
+      </div>
+    </div>
+
+    <div id="modal-alert" class="modal-overlay hidden">
+      <div class="modal-card">
+        <h3 id="alert-title"></h3>
+        <p id="alert-msg"></p>
+        <div class="modal-actions">
+          <button id="alert-cancel"  class="btn-secondary">Cancelar</button>
+          <button id="alert-confirm" class="btn-primary">Confirmar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="pages">
+
+      <!-- HOME -->
+      <div id="page-home" class="page active">
+        <div class="page-header">
+          <div class="header-left">
+            <div class="avatar-wrap" id="home-avatar-wrap">
+              <img id="home-avatar" src="" alt="avatar" class="avatar-img hidden" />
+              <div id="home-avatar-fallback" class="avatar-fallback">😊</div>
+            </div>
+            <div>
+              <p class="greeting"   id="home-greeting">Olá!</p>
+              <p class="date-label" id="home-date"></p>
+            </div>
+          </div>
+          <button class="icon-btn" id="home-settings-btn">⚙️</button>
+        </div>
+        <div class="points-card green-card">
+          <div class="points-card-left">
+            <p class="card-label">Horas este mês</p>
+            <p class="card-value" id="home-total-h">0h 00m</p>
+            <p class="card-sub"   id="home-week-h">↑ +0h esta semana</p>
+          </div>
+          <div class="card-doodle">🌿</div>
+        </div>
+        <div class="donut-section">
+          <canvas id="donut-chart" width="160" height="160"></canvas>
+          <div class="donut-center">
+            <p id="donut-pct">0%</p>
+            <p class="donut-label">da meta</p>
+          </div>
+          <div class="donut-legend">
+            <div class="legend-item"><span class="dot green"></span><span id="legend-done">0h feitas</span></div>
+            <div class="legend-item"><span class="dot gray"></span><span  id="legend-left">171h de meta</span></div>
+            <div class="legend-item"><span class="dot orange"></span><span id="legend-credit">+0h crédito</span></div>
+          </div>
+        </div>
+        <p class="section-title">Ações rápidas</p>
+        <div class="quick-actions">
+          <div class="qa-card blue"   id="qa-timer">  <div class="qa-icon">⏱</div><p>Cronômetro</p></div>
+          <div class="qa-card yellow" id="qa-log">    <div class="qa-icon">✏️</div><p>Lançar horas</p></div>
+          <div class="qa-card purple" id="qa-history"><div class="qa-icon">📋</div><p>Histórico</p></div>
+        </div>
+        <div class="section-header">
+          <p class="section-title">Últimos lançamentos</p>
+          <span class="view-all" id="home-view-all">Ver tudo</span>
+        </div>
+        <div id="recent-list" class="entry-list"></div>
+      </div>
+
+      <!-- TIMER -->
+      <div id="page-timer" class="page hidden">
+        <div class="page-header">
+          <button class="back-btn" id="timer-back">← Voltar</button>
+          <h2>Cronômetro</h2><div></div>
+        </div>
+        <div class="timer-card blue-card">
+          <p class="card-label">Tempo rodando</p>
+          <p class="timer-display" id="timer-display">00:00:00</p>
+          <p class="card-sub" id="timer-started-at">—</p>
+        </div>
+        <div class="timer-controls">
+          <button id="btn-start"  class="btn-timer green">        ▶ Iniciar</button>
+          <button id="btn-pause"  class="btn-timer yellow hidden">⏸ Pausar</button>
+          <button id="btn-resume" class="btn-timer green  hidden">▶ Retomar</button>
+          <button id="btn-stop"   class="btn-timer red    hidden">⏹ Encerrar</button>
+        </div>
+        <div class="alarm-section">
+          <p class="section-title">🔔 Alarmes do dia</p>
+          <div id="alarm-list" class="alarm-list"></div>
+        </div>
+      </div>
+
+      <!-- LOG -->
+      <div id="page-log" class="page hidden">
+        <div class="page-header">
+          <button class="back-btn" id="log-back">← Voltar</button>
+          <h2>Lançar horas</h2><div></div>
+        </div>
+        <div class="log-form card">
+          <div class="form-group">
+            <label>Data</label>
+            <input type="date" id="log-date" />
+          </div>
+          <div class="form-group">
+            <label>Horas trabalhadas</label>
+            <div class="time-inputs">
+              <input type="number" id="log-hours"   min="0" max="24" placeholder="0" />
+              <span>h</span>
+              <input type="number" id="log-minutes" min="0" max="59" placeholder="00" />
+              <span>min</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Notas (opcional)</label>
+            <input type="text" id="log-notes" placeholder="ex: reuniões, desenvolvimento..." />
+          </div>
+          <button class="btn-primary" id="btn-save-log">Salvar lançamento</button>
+        </div>
+      </div>
+
+      <!-- HISTORY -->
+      <div id="page-history" class="page hidden">
+        <div class="page-header">
+          <button class="back-btn" id="history-back">← Voltar</button>
+          <h2>Histórico</h2><div></div>
+        </div>
+        <div class="month-tabs" id="month-tabs"></div>
+        <div id="history-list" class="entry-list"></div>
+        <div class="credit-card-section">
+          <p class="section-title">🏆 Créditos acumulados</p>
+          <div id="credits-list" class="credits-list"></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="page-settings" class="page hidden">
+        <div class="page-header">
+          <button class="back-btn" id="settings-back">← Voltar</button>
+          <h2>Configurações</h2><div></div>
+        </div>
+        <div class="settings-section card">
+          <p class="settings-section-title">Perfil</p>
+          <div class="avatar-upload-wrap">
+            <div class="avatar-upload" id="avatar-upload-btn">
+              <img id="settings-avatar" src="" class="hidden" alt="avatar" />
+              <div id="settings-avatar-fallback" class="avatar-fallback large">😊</div>
+              <div class="avatar-overlay">📷</div>
+            </div>
+            <input type="file" id="avatar-file" accept="image/*" class="hidden" />
+          </div>
+          <div class="form-group">
+            <label>Nome de exibição</label>
+            <input type="text" id="settings-name" placeholder="Seu nome" />
+          </div>
+          <div class="form-group">
+            <label>E-mail (conta)</label>
+            <input type="email" id="settings-email" disabled style="opacity:0.5;cursor:not-allowed" />
+          </div>
+        </div>
+        <div class="settings-section card">
+          <p class="settings-section-title">Metas & Horas</p>
+          <div class="form-group">
+            <label>Meta mensal de horas</label>
+            <input type="number" id="settings-goal" min="1" max="400" />
+          </div>
+          <div class="form-group">
+            <label>Horas por dia de trabalho</label>
+            <input type="number" id="settings-hpd" min="1" max="24" step="0.5" />
+          </div>
+          <div class="toggle-row">
+            <div>
+              <p class="toggle-label">Resetar crédito ao virar o ano</p>
+              <p class="toggle-desc">Créditos de anos anteriores não serão contabilizados</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="settings-reset-year" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="settings-section card">
+          <p class="settings-section-title">🔔 Alarmes / Notificações</p>
+          <div id="alarms-config-list"></div>
+          <button class="btn-secondary" id="btn-add-alarm">+ Adicionar alarme</button>
+        </div>
+        <button class="btn-primary" id="btn-save-settings">Salvar configurações</button>
+        <button class="btn-logout"  id="btn-logout">Sair da conta</button>
+      </div>
+
+    </div><!-- /pages -->
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-page="home">    <span class="nav-icon">🏠</span><span>Início</span></button>
+      <button class="nav-btn"        data-page="timer">   <span class="nav-icon">⚡</span><span>Timer</span></button>
+      <button class="nav-btn"        data-page="log">     <span class="nav-icon">✏️</span><span>Lançar</span></button>
+      <button class="nav-btn"        data-page="history"> <span class="nav-icon">📋</span><span>Histórico</span></button>
+      <button class="nav-btn"        data-page="settings"><span class="nav-icon">👤</span><span>Perfil</span></button>
+    </nav>
+
+  </div><!-- /screen-app -->
+</div><!-- /app -->
+
+<script type="module" src="app.js"></script>
 </body>
 </html>
