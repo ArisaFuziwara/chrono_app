@@ -94,6 +94,61 @@ body {
 
 .login-hint { text-align: center; font-size: 13px; color: var(--text-light); }
 
+/* AUTH TABS */
+.auth-tabs {
+  display: flex;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  gap: 4px;
+}
+.auth-tab {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+.auth-tab.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+.auth-form { display: flex; flex-direction: column; gap: 16px; }
+.btn-forgot {
+  background: none;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: center;
+  text-decoration: underline;
+}
+
+/* LOADING SCREEN */
+.loading-screen {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: var(--bg);
+}
+.loading-logo {
+  font-size: 64px;
+  animation: spin 1.5s linear infinite;
+}
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.loading-screen p { font-weight: 700; color: var(--text-muted); font-size: 16px; }
+
 /* FORM */
 .form-group { display: flex; flex-direction: column; gap: 6px; }
 .form-group label { font-weight: 700; font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -234,7 +289,7 @@ body {
 /* CARDS */
 .points-card {
   border-radius: var(--radius);
-  padding: 28px;
+  padding: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -251,6 +306,7 @@ body {
   gap: 8px;
   padding: 28px 28px 24px;
 }
+
 .card-label { font-size: 13px; font-weight: 700; color: rgba(0,0,0,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
 .card-value { font-size: 36px; font-weight: 900; font-family: 'Space Mono', monospace; margin: 4px 0; }
 .card-sub { font-size: 13px; font-weight: 600; color: rgba(0,0,0,0.6); }
@@ -717,4 +773,67 @@ input:checked + .slider:before { transform: translateX(22px); }
   .bottom-nav { left: 0; transform: none; }
   .notif-banner { left: 0; transform: none; }
   .modal-overlay { padding: 16px; }
+}
+
+/* ── AUTH TABS ── */
+.auth-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+}
+.auth-tab {
+  flex: 1;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+.auth-tab.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-forgot {
+  background: none;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--blue-dark);
+  cursor: pointer;
+  text-align: center;
+  padding: 4px;
+}
+
+/* ── LOADING SCREEN ── */
+.loading-screen {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: var(--bg);
+}
+.loading-logo {
+  font-size: 64px;
+  animation: spin 1.5s linear infinite;
+}
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.loading-screen p { font-weight: 700; color: var(--text-muted); }
+
+/* ── TIMER CARD FIX ── */
+.timer-card {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 28px 28px 24px;
 }
