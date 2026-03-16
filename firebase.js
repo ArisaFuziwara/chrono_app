@@ -11,13 +11,13 @@ import { getFirestore }   from "https://www.gstatic.com/firebasejs/10.12.0/fireb
 import { getStorage }     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 const firebaseConfig = {
-  apiKey:            "COLE_SUA_API_KEY_AQUI",
-  authDomain:        "SEU_PROJETO.firebaseapp.com",
-  projectId:         "SEU_PROJETO_ID",
-  storageBucket:     "SEU_PROJETO.appspot.com",
-  messagingSenderId: "SEU_SENDER_ID",
-  appId:             "SEU_APP_ID",
-};
+    apiKey: "AIzaSyBjDPUAzwaG99-lMtRxpce2rzsfvwK61sw",
+    authDomain: "chrono-app-77445.firebaseapp.com",
+    projectId: "chrono-app-77445",
+    storageBucket: "chrono-app-77445.firebasestorage.app",
+    messagingSenderId: "904704988952",
+    appId: "1:904704988952:web:19e280fc1d7546790df06d"
+  };
 
 const app = initializeApp(firebaseConfig);
 
