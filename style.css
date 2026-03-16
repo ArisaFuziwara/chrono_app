@@ -234,7 +234,7 @@ body {
 /* CARDS */
 .points-card {
   border-radius: var(--radius);
-  padding: 24px;
+  padding: 28px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -245,6 +245,12 @@ body {
 .green-card { background: var(--green); }
 .blue-card { background: var(--blue); }
 
+.timer-card {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 28px 28px 24px;
+}
 .card-label { font-size: 13px; font-weight: 700; color: rgba(0,0,0,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
 .card-value { font-size: 36px; font-weight: 900; font-family: 'Space Mono', monospace; margin: 4px 0; }
 .card-sub { font-size: 13px; font-weight: 600; color: rgba(0,0,0,0.6); }
