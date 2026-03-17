@@ -777,31 +777,41 @@ input:checked + .slider:before { transform: translateX(22px); }
 
 /* ── RESPONSIVE: DESKTOP (768px+) ── */
 @media (min-width: 768px) {
+
+  /* Body fills screen, no centering */
   body {
-    align-items: flex-start;
+    align-items: stretch;
     justify-content: flex-start;
-    background: #d6eaf8;
   }
 
-  /* Login stays centered */
+  /* #app breaks free of mobile constraint */
+  #app {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  /* Login: centered overlay */
   #screen-login {
     position: fixed; inset: 0;
     display: flex !important;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
   }
-  #screen-login .login-bg { position: fixed; }
-  #screen-login .login-card { max-width: 420px; width: 100%; }
-
-  /* App shell: full viewport, row */
-  #screen-app {
-    width: 100vw;
-    min-height: 100dvh;
-    flex-direction: row;
-    align-items: stretch;
+  #screen-login .login-card {
+    max-width: 420px;
+    width: 100%;
+    margin: 0;
   }
 
-  /* ── SIDEBAR ── */
+  /* App shell: row layout */
+  #screen-app {
+    flex-direction: row;
+    width: 100%;
+    min-height: 100dvh;
+  }
+
+  /* Sidebar */
   .bottom-nav {
     position: fixed;
     left: 0; top: 0; bottom: 0;
@@ -810,45 +820,45 @@ input:checked + .slider:before { transform: translateX(22px); }
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
-    padding: 72px 16px 24px;
+    padding: 76px 12px 24px;
     gap: 2px;
     border-top: none;
     border-right: 1px solid var(--border);
     transform: none;
+    max-width: none;
     background: var(--surface);
-    box-shadow: 2px 0 16px rgba(0,0,0,0.06);
+    box-shadow: 2px 0 12px rgba(0,0,0,0.06);
     overflow-y: auto;
     z-index: 100;
   }
 
-  /* Sidebar logo header */
+  /* Sidebar logo */
   .bottom-nav::before {
     content: "⏱ Chrono";
     font-family: 'Nunito', sans-serif;
     font-weight: 900;
-    font-size: 18px;
-    letter-spacing: -0.5px;
+    font-size: 17px;
     color: var(--text);
     position: fixed;
     top: 0; left: 0;
     width: 220px;
-    height: 60px;
+    height: 64px;
     display: flex;
     align-items: center;
-    padding: 0 24px;
+    padding: 0 20px;
     background: var(--surface);
     border-bottom: 1px solid var(--border);
     border-right: 1px solid var(--border);
     z-index: 101;
   }
 
-  /* Nav buttons become horizontal rows */
+  /* Nav buttons */
   .nav-btn {
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
-    padding: 11px 14px;
+    padding: 11px 12px;
     border-radius: var(--radius-sm);
     font-size: 14px;
     font-weight: 700;
@@ -856,27 +866,28 @@ input:checked + .slider:before { transform: translateX(22px); }
     color: var(--text-muted);
     transition: background 0.15s, color 0.15s;
   }
-  .nav-btn:hover { background: var(--bg); color: var(--text); }
+  .nav-btn:hover  { background: var(--bg); color: var(--text); }
   .nav-btn.active { background: var(--bg); color: var(--text); }
-  .nav-btn .nav-icon { font-size: 18px; line-height: 1; flex-shrink: 0; }
+  .nav-btn .nav-icon { font-size: 18px; flex-shrink: 0; }
 
-  /* ── MAIN CONTENT AREA ── */
+  /* Pages container: shifted right of sidebar, scrollable */
   #pages {
     margin-left: 220px;
     flex: 1;
-    padding-bottom: 40px;
+    overflow-y: auto;
+    padding-bottom: 0;
     min-height: 100dvh;
   }
 
+  /* Individual pages */
   .page {
-    width: 100%;
-    max-width: 640px;
-    padding: 0 40px 40px;
+    max-width: 600px;
+    padding: 0 40px 60px;
   }
 
-  /* Fix green card — prevent text wrapping */
-  .points-card { white-space: nowrap; }
-  .card-value { font-size: 40px; white-space: nowrap; }
+  /* Card fixes */
+  .card-value { font-size: 38px; }
+  .points-card-left { min-width: 0; }
 
   /* Notification */
   .notif-banner {
@@ -885,67 +896,10 @@ input:checked + .slider:before { transform: translateX(22px); }
     max-width: none;
     transform: none;
   }
+  @keyframes slideDown {
+    from { transform: translateY(-100%); }
+    to   { transform: translateY(0); }
+  }
 }
 
-/* ── AUTH TABS ── */
-.auth-tabs {
-  display: flex;
-  gap: 4px;
-  background: var(--bg);
-  border-radius: var(--radius-sm);
-  padding: 4px;
-}
-.auth-tab {
-  flex: 1;
-  border: none;
-  border-radius: 8px;
-  padding: 10px;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
-  background: transparent;
-  color: var(--text-muted);
-  transition: all 0.2s;
-}
-.auth-tab.active {
-  background: var(--surface);
-  color: var(--text);
-  box-shadow: var(--shadow-sm);
-}
 
-.btn-forgot {
-  background: none;
-  border: none;
-  font-family: 'Nunito', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--blue-dark);
-  cursor: pointer;
-  text-align: center;
-  padding: 4px;
-}
-
-/* ── LOADING SCREEN ── */
-.loading-screen {
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  background: var(--bg);
-}
-.loading-logo {
-  font-size: 64px;
-  animation: spin 1.5s linear infinite;
-}
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-.loading-screen p { font-weight: 700; color: var(--text-muted); }
-
-/* ── TIMER CARD FIX ── */
-.timer-card {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 28px 28px 24px;
-}
