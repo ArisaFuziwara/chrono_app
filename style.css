@@ -864,23 +864,18 @@ input:checked + .slider:before { transform: translateX(22px); }
   #pages {
     margin-left: 220px;
     flex: 1;
-    display: flex;
-    justify-content: center;
     padding-bottom: 40px;
     min-height: 100dvh;
   }
 
-  /* Each page is capped and centered */
   .page {
     width: 100%;
-    max-width: 560px;
-    padding: 0 24px 40px;
+    max-width: 640px;
+    padding: 0 40px 40px;
   }
 
   /* Fix green card — prevent text wrapping */
-  .points-card {
-    white-space: nowrap;
-  }
+  .points-card { white-space: nowrap; }
   .card-value { font-size: 40px; white-space: nowrap; }
 
   /* Notification */
