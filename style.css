@@ -777,89 +777,119 @@ input:checked + .slider:before { transform: translateX(22px); }
 
 /* ── RESPONSIVE: DESKTOP (768px+) ── */
 @media (min-width: 768px) {
-  body { align-items: flex-start; background: #d6eaf8; }
+  body {
+    align-items: flex-start;
+    justify-content: flex-start;
+    background: #d6eaf8;
+  }
 
+  /* Login stays centered */
+  #screen-login {
+    position: fixed; inset: 0;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
   #screen-login .login-bg { position: fixed; }
-  #screen-login { justify-content: center; align-items: center; }
   #screen-login .login-card { max-width: 420px; width: 100%; }
 
-  /* App shell */
+  /* App shell: full viewport, row */
   #screen-app {
-    flex-direction: row;
+    width: 100vw;
     min-height: 100dvh;
-    max-width: 100%;
-    width: 100%;
+    flex-direction: row;
     align-items: stretch;
   }
 
-  /* Sidebar nav replaces bottom nav */
+  /* ── SIDEBAR ── */
   .bottom-nav {
     position: fixed;
     left: 0; top: 0; bottom: 0;
-    width: 200px;
+    width: 220px;
     height: 100dvh;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 80px 12px 32px;
-    gap: 4px;
+    align-items: stretch;
+    padding: 72px 16px 24px;
+    gap: 2px;
     border-top: none;
     border-right: 1px solid var(--border);
     transform: none;
     background: var(--surface);
-    box-shadow: 2px 0 12px rgba(0,0,0,0.05);
+    box-shadow: 2px 0 16px rgba(0,0,0,0.06);
     overflow-y: auto;
+    z-index: 100;
   }
+
+  /* Sidebar logo header */
   .bottom-nav::before {
-    content: "\23F1  Chrono";
+    content: "⏱ Chrono";
     font-family: 'Nunito', sans-serif;
     font-weight: 900;
-    font-size: 20px;
+    font-size: 18px;
+    letter-spacing: -0.5px;
     color: var(--text);
     position: fixed;
     top: 0; left: 0;
-    width: 200px;
-    padding: 20px 28px;
+    width: 220px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
     background: var(--surface);
     border-bottom: 1px solid var(--border);
     border-right: 1px solid var(--border);
     z-index: 101;
   }
+
+  /* Nav buttons become horizontal rows */
   .nav-btn {
     flex-direction: row;
     justify-content: flex-start;
+    align-items: center;
     gap: 10px;
-    padding: 12px 16px;
+    padding: 11px 14px;
     border-radius: var(--radius-sm);
     font-size: 14px;
+    font-weight: 700;
     width: 100%;
     color: var(--text-muted);
+    transition: background 0.15s, color 0.15s;
   }
-  .nav-btn.active {
-    background: var(--bg);
-    color: var(--text);
-  }
-  .nav-btn .nav-icon { font-size: 18px; }
+  .nav-btn:hover { background: var(--bg); color: var(--text); }
+  .nav-btn.active { background: var(--bg); color: var(--text); }
+  .nav-btn .nav-icon { font-size: 18px; line-height: 1; flex-shrink: 0; }
 
-  /* Pages area shifts right of sidebar */
+  /* ── MAIN CONTENT AREA ── */
   #pages {
-    margin-left: 200px;
+    margin-left: 220px;
     flex: 1;
-    max-width: 800px;
+    display: flex;
+    justify-content: center;
     padding-bottom: 40px;
+    min-height: 100dvh;
   }
-  .page { padding: 0 40px 40px; }
 
-  /* Notification respects sidebar */
+  /* Each page is capped and centered */
+  .page {
+    width: 100%;
+    max-width: 560px;
+    padding: 0 24px 40px;
+  }
+
+  /* Fix green card — prevent text wrapping */
+  .points-card {
+    white-space: nowrap;
+  }
+  .card-value { font-size: 40px; white-space: nowrap; }
+
+  /* Notification */
   .notif-banner {
-    left: 200px;
-    width: calc(100% - 200px);
+    left: 220px;
+    width: calc(100% - 220px);
     max-width: none;
     transform: none;
   }
-}
-
-@media (min-width: 1100px) {
-  #pages { max-width: 960px; }
 }
 
 /* ── AUTH TABS ── */
