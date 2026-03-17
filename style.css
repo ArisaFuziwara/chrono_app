@@ -767,12 +767,99 @@ input:checked + .slider:before { transform: translateX(22px); }
 .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
 .empty-state p { font-weight: 600; }
 
-/* RESPONSIVE */
+/* ── RESPONSIVE: MOBILE ── */
 @media (max-width: 430px) {
   #app { max-width: 100%; }
-  .bottom-nav { left: 0; transform: none; }
+  .bottom-nav  { left: 0; transform: none; }
   .notif-banner { left: 0; transform: none; }
   .modal-overlay { padding: 16px; }
+}
+
+/* ── RESPONSIVE: DESKTOP (768px+) ── */
+@media (min-width: 768px) {
+  body { align-items: flex-start; background: #d6eaf8; }
+
+  #screen-login .login-bg { position: fixed; }
+  #screen-login { justify-content: center; align-items: center; }
+  #screen-login .login-card { max-width: 420px; width: 100%; }
+
+  /* App shell */
+  #screen-app {
+    flex-direction: row;
+    min-height: 100dvh;
+    max-width: 100%;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  /* Sidebar nav replaces bottom nav */
+  .bottom-nav {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: 200px;
+    height: 100dvh;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 80px 12px 32px;
+    gap: 4px;
+    border-top: none;
+    border-right: 1px solid var(--border);
+    transform: none;
+    background: var(--surface);
+    box-shadow: 2px 0 12px rgba(0,0,0,0.05);
+    overflow-y: auto;
+  }
+  .bottom-nav::before {
+    content: "\23F1  Chrono";
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 20px;
+    color: var(--text);
+    position: fixed;
+    top: 0; left: 0;
+    width: 200px;
+    padding: 20px 28px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    z-index: 101;
+  }
+  .nav-btn {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    width: 100%;
+    color: var(--text-muted);
+  }
+  .nav-btn.active {
+    background: var(--bg);
+    color: var(--text);
+  }
+  .nav-btn .nav-icon { font-size: 18px; }
+
+  /* Pages area shifts right of sidebar */
+  #pages {
+    margin-left: 200px;
+    flex: 1;
+    max-width: 800px;
+    padding-bottom: 40px;
+  }
+  .page { padding: 0 40px 40px; }
+
+  /* Notification respects sidebar */
+  .notif-banner {
+    left: 200px;
+    width: calc(100% - 200px);
+    max-width: none;
+    transform: none;
+  }
+}
+
+@media (min-width: 1100px) {
+  #pages { max-width: 960px; }
 }
 
 /* ── AUTH TABS ── */

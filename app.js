@@ -220,6 +220,8 @@ function initApp() {
   renderHome();
   startAlarmChecker();
   if (profile.timer?.running && !profile.timer?.paused) resumeTimerInterval();
+  // Recalcula créditos retroativos silenciosamente
+  recalcAllCredits().then(() => renderHome());
 }
 
 function bindNavButtons() {
@@ -554,6 +556,38 @@ async function checkEndOfMonthCelebration(dateISO) {
     const extra = monthMin - goalMin;
     await saveCredit(y, m, extra);
     showCelebration(y, m, monthMin, goalMin, extra);
+  }
+}
+
+// Recalcula créditos de TODOS os meses com entradas (retroativo)
+async function recalcAllCredits() {
+  const goalMin = (profile.goalHours||171)*60;
+
+  // Agrupa entradas por ano-mês
+  const byMonth = {};
+  entries.forEach(e => {
+    const [y,m] = e.date.split("-").map(Number);
+    const key = `${y}-${m}`;
+    byMonth[key] = (byMonth[key] || 0) + e.minutes;
+  });
+
+  const now = new Date();
+
+  for (const key of Object.keys(byMonth)) {
+    const [y, m] = key.split("-").map(Number);
+
+    // Só meses já encerrados (não o mês atual)
+    const isCurrentMonth = (y === now.getFullYear() && m === now.getMonth()+1);
+    if (isCurrentMonth) continue;
+
+    // Se reset anual ativo, ignora anos anteriores
+    if (profile.resetOnNewYear && y < now.getFullYear()) continue;
+
+    const monthMin = byMonth[key];
+    if (monthMin >= goalMin) {
+      const extra = monthMin - goalMin;
+      await saveCredit(y, m, extra);
+    }
   }
 }
 
