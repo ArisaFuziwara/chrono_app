@@ -49,6 +49,7 @@ const defaultProfile = () => ({
 // ─── HELPERS ──────────────────────────────────────
 const $  = id => document.getElementById(id);
 const fmtHM = m => `${Math.floor(m/60)}h ${String(m%60).padStart(2,"0")}m`;
+const fmtHH = h => `${h}h`;
 const todayISO = () => new Date().toISOString().split("T")[0];
 const monthLabel = (y,m) => {
   const months = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
@@ -345,26 +346,31 @@ function getMonthAndWeekMinutes() {
 }
 
 // ─── DONUT ────────────────────────────────────────
-function drawDonut(doneMin, goalMin) {
-  const canvas = $("donut-chart");
+function drawDonut(doneMin, goalMin, canvasId="donut-chart", pctId="donut-pct", size=160) {
+  const canvas = $(canvasId);
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
-  const cx=80,cy=80,r=62,lw=22;
-  ctx.clearRect(0,0,160,160);
+  const half = size/2;
+  const r = half - 18, lw = size === 140 ? 18 : 22;
+  ctx.clearRect(0,0,size,size);
 
-  const pct = Math.min(doneMin/goalMin,1);
+  const pct = Math.min(doneMin/goalMin, 1);
 
+  // Background ring
   ctx.beginPath();
-  ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.arc(half,half,r,0,Math.PI*2);
   ctx.strokeStyle="#e2e8f0"; ctx.lineWidth=lw; ctx.stroke();
 
+  // Progress arc
   if (pct>0) {
     ctx.beginPath();
-    ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+Math.PI*2*pct);
-    ctx.strokeStyle="#6dbf67"; ctx.lineWidth=lw; ctx.lineCap="round"; ctx.stroke();
+    ctx.arc(half,half,r,-Math.PI/2,-Math.PI/2+Math.PI*2*pct);
+    ctx.strokeStyle = doneMin >= goalMin ? "#6dbf67" : "#5a9fd4";
+    ctx.lineWidth=lw; ctx.lineCap="round"; ctx.stroke();
   }
 
-  $("donut-pct").textContent = `${Math.round(pct*100)}%`;
+  const pctEl = $(pctId);
+  if (pctEl) pctEl.textContent = `${Math.round(pct*100)}%`;
 }
 
 // ─── TIMER ────────────────────────────────────────
@@ -633,6 +639,7 @@ function renderHistory() {
     const n = new Date();
     currentHistoryMonth = `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}`;
   }
+
   $("month-tabs").innerHTML = months.map(m=>`
     <button class="month-tab ${m.key===currentHistoryMonth?"active":""}" data-month="${m.key}">${m.label}</button>`).join("");
   document.querySelectorAll(".month-tab").forEach(btn=>{
@@ -640,28 +647,67 @@ function renderHistory() {
   });
 
   const [y,mo] = currentHistoryMonth.split("-").map(Number);
+
+  // Entradas do mês selecionado
   const filtered = entries
     .filter(e=>{ const [ey,em]=e.date.split("-").map(Number); return ey===y&&em===mo; })
     .sort((a,b)=>b.date.localeCompare(a.date));
   renderEntryList("history-list", filtered, true);
 
-  const hpd = profile.hoursPerDay||8;
+  // Resumo do mês: total trabalhado + status de meta
+  const monthMin  = filtered.reduce((a,e)=>a+e.minutes,0);
+  const goalMin   = (profile.goalHours||171)*60;
+  const hpd       = profile.hoursPerDay||8;
+  const metAtGoal = monthMin >= goalMin;
+  const extraMin  = Math.max(monthMin - goalMin, 0);
+  const missingMin= Math.max(goalMin - monthMin, 0);
+
+  // Crédito acumulado ATÉ este mês (soma todos os meses anteriores + atual)
+  const accumulatedMin = credits
+    .filter(c => c.year < y || (c.year === y && c.month <= mo))
+    .reduce((a,c) => a+c.extraMinutes, 0);
+
   const creditsList = $("credits-list");
-  if (!credits.length) {
-    creditsList.innerHTML="<p style='color:var(--text-muted);font-size:14px;padding:8px 0'>Nenhum crédito acumulado ainda.</p>";
-  } else {
-    creditsList.innerHTML = credits
-      .sort((a,b)=>b.year-a.year||b.month-a.month)
-      .map(c=>`
-        <div class="credit-item">
-          <div>
-            <div class="credit-month">${monthLabel(c.year,c.month)}</div>
-            <div class="credit-days">~${(c.extraMinutes/60/hpd).toFixed(1)} dias de folga</div>
-          </div>
-          <div class="credit-hours">+${fmtHM(c.extraMinutes)}</div>
-        </div>`).join("");
-  }
+  const isCurrentMonth = (y === new Date().getFullYear() && mo === new Date().getMonth()+1);
+
+  // Draw history donut
+  drawDonut(monthMin, goalMin, "history-donut", "history-donut-pct", 140);
+  $("history-donut-title").textContent = monthLabel(y, mo);
+  $("history-donut-legend").innerHTML = `
+    <div class="legend-item"><span class="dot ${metAtGoal?"green":"blue"}"></span><span>${fmtHM(monthMin)} trabalhadas</span></div>
+    <div class="legend-item"><span class="dot gray"></span><span>${fmtHH(profile.goalHours||171)} de meta</span></div>
+    ${extraMin > 0 ? `<div class="legend-item"><span class="dot orange"></span><span>+${fmtHM(extraMin)} crédito</span></div>` : ""}
+  `;
+
+  creditsList.innerHTML = `
+    <div class="month-summary-card">
+      <div class="ms-row">
+        <span class="ms-label">Total trabalhado</span>
+        <span class="ms-value">${fmtHM(monthMin)}</span>
+      </div>
+      <div class="ms-row">
+        <span class="ms-label">Meta do mês</span>
+        <span class="ms-value">${fmtHH(profile.goalHours||171)}</span>
+      </div>
+      <div class="ms-row">
+        <span class="ms-label">Status</span>
+        <span class="ms-badge ${metAtGoal?"badge-ok":"badge-pending"}">
+          ${metAtGoal ? "✅ Meta atingida" : isCurrentMonth ? `⏳ Faltam ${fmtHM(missingMin)}` : `❌ Faltaram ${fmtHM(missingMin)}`}
+        </span>
+      </div>
+      ${extraMin > 0 ? `
+      <div class="ms-row">
+        <span class="ms-label">Crédito gerado este mês</span>
+        <span class="ms-value credit-val">+${fmtHM(extraMin)} (~${(extraMin/60/hpd).toFixed(1)} dias)</span>
+      </div>` : ""}
+      ${accumulatedMin > 0 ? `
+      <div class="ms-row ms-row-total">
+        <span class="ms-label">Crédito acumulado até aqui</span>
+        <span class="ms-value credit-val">+${fmtHM(accumulatedMin)}</span>
+      </div>` : ""}
+    </div>`;
 }
+
 
 function getAvailableMonths() {
   const set = new Set();

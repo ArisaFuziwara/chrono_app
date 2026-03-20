@@ -2,7 +2,6 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏱</text></svg>" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chrono — Controle de Horas</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -213,8 +212,20 @@
         </div>
         <div class="month-tabs" id="month-tabs"></div>
         <div id="history-list" class="entry-list"></div>
+        <div class="history-donut-section">
+          <div class="history-donut-wrap">
+            <canvas id="history-donut" width="140" height="140"></canvas>
+            <div class="history-donut-center">
+              <p id="history-donut-pct">0%</p>
+              <p class="donut-label">da meta</p>
+            </div>
+          </div>
+          <div class="history-donut-info">
+            <p id="history-donut-title" class="history-donut-title"></p>
+            <div id="history-donut-legend" class="history-donut-legend"></div>
+          </div>
+        </div>
         <div class="credit-card-section">
-          <p class="section-title">🏆 Créditos acumulados</p>
           <div id="credits-list" class="credits-list"></div>
         </div>
       </div>
