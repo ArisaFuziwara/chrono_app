@@ -662,17 +662,22 @@ function renderHistory() {
   const extraMin  = Math.max(monthMin - goalMin, 0);
   const missingMin= Math.max(goalMin - monthMin, 0);
 
-  // Crédito acumulado ATÉ este mês (soma todos os meses anteriores + atual)
+  // Crédito acumulado ATÉ este mês (soma todos os meses até y-mo inclusive)
   const accumulatedMin = credits
-    .filter(c => c.year < y || (c.year === y && c.month <= mo))
+    .filter(c => (c.year * 100 + c.month) <= (y * 100 + mo))
     .reduce((a,c) => a+c.extraMinutes, 0);
+  
+  // Crédito APENAS deste mês (do array credits, não do cálculo local)
+  const thisMonthCredit = credits.find(c => c.year === y && c.month === mo);
 
   const creditsList = $("credits-list");
   const isCurrentMonth = (y === new Date().getFullYear() && mo === new Date().getMonth()+1);
 
-  // Draw history donut
-  drawDonut(monthMin, goalMin, "history-donut", "history-donut-pct", 140);
+  // Draw history donut — defer so canvas is visible in DOM first
   $("history-donut-title").textContent = monthLabel(y, mo);
+  requestAnimationFrame(() => {
+    drawDonut(monthMin, goalMin, "history-donut", "history-donut-pct", 140);
+  });
   $("history-donut-legend").innerHTML = `
     <div class="legend-item"><span class="dot ${metAtGoal?"green":"blue"}"></span><span>${fmtHM(monthMin)} trabalhadas</span></div>
     <div class="legend-item"><span class="dot gray"></span><span>${fmtHH(profile.goalHours||171)} de meta</span></div>
